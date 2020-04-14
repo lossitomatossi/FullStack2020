@@ -12,11 +12,9 @@ const Button = (props) => {
 const Votes = (props) => {
   console.log(props)
   return (
-    <>
       <p>Has {props.votes} votes</p>
-    </>
   )
-}
+  }
 
 
 const App = (props) => {
@@ -50,12 +48,16 @@ const App = (props) => {
 
   return (
     <div>
-      {props.anecdotes[selected]}
+      <h1>Anecdote of the day {rand}</h1>
+      <h1>{points}</h1>
+      {props.anecdotes[rand]}
       <Votes votes = {points[rand]}/>
-      <div>
-        <Button handleClick={() => setToValueSelected()} text="new anecdote"/>
-        <Button handleClick={() => setValueToPoints(rand)} text="new Vote" value={rand}/>
-      </div>
+      <Button handleClick={() => setToValueSelected()} text="new anecdote"/>
+      <Button handleClick={() => setValueToPoints(rand)} text="new Vote" value={rand}/>      
+      <h1>Anecdote with most wins</h1>
+      {props.anecdotes[points.indexOf(Math.max(...points))]}
+      <Votes votes = {points[points.indexOf(Math.max(...points))]} />
+
     </div>
   )
 }
