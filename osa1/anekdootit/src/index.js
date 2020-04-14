@@ -1,38 +1,28 @@
 import React, { useState } from 'react'
 import ReactDOM from 'react-dom'
 
-const Button = (props) => {
-  return (
-    <button onClick={props.handleClick}>
+const Button = (props) => (
+  <button onClick={props.handleClick}>
     {props.text}
   </button>
-  )
-}
+)
 
-const Votes = (props) => {
-  console.log(props)
-  return (
-      <p>Has {props.votes} votes</p>
-  )
-  }
+
+const Votes = (props) => (
+  <p>Has {props.votes} votes</p>
+)
+  
 
 
 const App = (props) => {
-  const [selected, setSelected] = useState(0)
-
-  const setToValueSelected = () => {
-    setValueToRand(getRandomInt(6))
-    setSelected(rand)
-  }
-
   function getRandomInt(max) {
     return Math.floor(Math.random() * Math.floor(max));
   }
 
   const [rand, setRand] = useState(0)
 
-  const setValueToRand = (newValue) => {
-    setRand(newValue)
+  const setValueToRand = () => {
+    setRand(getRandomInt(6))
   }
 
   const [points, setPoints] = useState(new Array(6).fill(0))
@@ -48,16 +38,15 @@ const App = (props) => {
 
   return (
     <div>
-      <h1>Anecdote of the day {rand}</h1>
+      <h1>Anecdote of the day</h1>
       <h1>{points}</h1>
       {props.anecdotes[rand]}
       <Votes votes = {points[rand]}/>
-      <Button handleClick={() => setToValueSelected()} text="new anecdote"/>
+      <Button handleClick={() => setValueToRand()} text="new anecdote"/>
       <Button handleClick={() => setValueToPoints(rand)} text="new Vote" value={rand}/>      
       <h1>Anecdote with most wins</h1>
       {props.anecdotes[points.indexOf(Math.max(...points))]}
       <Votes votes = {points[points.indexOf(Math.max(...points))]} />
-
     </div>
   )
 }
