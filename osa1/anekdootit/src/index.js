@@ -32,19 +32,15 @@ const App = (props) => {
     copy[anecdote] += 1
     setPoints(copy)
   }
-  
-  const copy = [...points]
-  copy[2] += 1
 
   return (
     <div>
       <h1>Anecdote of the day</h1>
-      <h1>{points}</h1>
       {props.anecdotes[rand]}
       <Votes votes = {points[rand]}/>
       <Button handleClick={() => setValueToRand()} text="new anecdote"/>
       <Button handleClick={() => setValueToPoints(rand)} text="new Vote" value={rand}/>      
-      <h1>Anecdote with most wins</h1>
+      <h1>Anecdote with most votes</h1>
       {props.anecdotes[points.indexOf(Math.max(...points))]}
       <Votes votes = {points[points.indexOf(Math.max(...points))]} />
     </div>
