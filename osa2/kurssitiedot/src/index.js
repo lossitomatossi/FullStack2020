@@ -1,28 +1,25 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-const Course = (props) => {
-  return (
+const Course = ({ course }) => (
     <div>
-      <Header header={props.course.name} />
-      <Content parts={props.course.parts} />
+      <Header header={course.name} />
+      <Content parts={course.parts} />
     </div>
-  )
-}
+)
 
-const Header = (props) => {
-  return (
+const Header = ({ header }) => (
     <>
-      <h1>{props.header}</h1>
+      <h1>{header}</h1>
     </>
-  )
-}
+)
 
 const Content = (props) => {
-  console.log(props)
   const { parts } = props
   console.log("content saa tiedot: ", parts)
-  
+  const exercises = parts.map((part) => part.exercises);
+  const reducer = (accumulator, currentValue) => accumulator + currentValue;
+  const total = Number(exercises.reduce(reducer));
   
   return (
     <div>
@@ -31,24 +28,26 @@ const Content = (props) => {
          <li key={part.id}>
            <Part part = {part} />
          </li>)}
+         <Total total={total} />
       </ul>
     </div>
   )
 }
 
 
-const Part = (props) => {
-  return (
+const Part = ({ part }) => (
     <>
-        {props.part.name} {props.part.exercises}
+      {part.name} {part.exercises}
     </>
-  )
-}
+)
 
-const Total = (props) => {
+const Total = ({ total }) => {
+  console.log("total saa tiedot", total)
   return (
     <>
-      <p>Number of exercises {props.total[0].exercises + props.total[1].exercises + props.total[2].exercises}</p>
+      <li>
+        <b>Number of exercises {total} </b>
+      </li>
     </>
   )
 }
@@ -72,13 +71,17 @@ const App = () => {
         name: 'State of a component',
         exercises: 14,
         id: 3
+     },
+     {
+       name: 'Redux',
+       exercises: 11,
+       id: 4
      }
    ]
   }
 
   return (
     <div>
-      <Total total={course.parts}/>
       <Course course={course}/>
     </div>
     
