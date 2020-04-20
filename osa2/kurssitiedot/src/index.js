@@ -10,13 +10,12 @@ const Course = ({ course }) => (
 
 const Header = ({ header }) => (
     <>
-      <h1>{header}</h1>
+      <h2>{header}</h2>
     </>
 )
 
 const Content = (props) => {
   const { parts } = props
-  console.log("content saa tiedot: ", parts)
   const exercises = parts.map((part) => part.exercises);
   const reducer = (accumulator, currentValue) => accumulator + currentValue;
   const total = Number(exercises.reduce(reducer));
@@ -42,7 +41,6 @@ const Part = ({ part }) => (
 )
 
 const Total = ({ total }) => {
-  console.log("total saa tiedot", total)
   return (
     <>
       <li>
@@ -53,7 +51,8 @@ const Total = ({ total }) => {
 }
  
 const App = () => {
-  const course = {
+  const courses = [
+    {
     name: 'Half Stack application development',
     id: 1,
     parts: [
@@ -78,12 +77,36 @@ const App = () => {
        id: 4
      }
    ]
+  },
+  {
+    name: 'Node.js',
+    id: 2,
+    parts: [
+      {
+        name: 'Routing',
+        exercises: 3,
+        id: 1
+      },
+      {
+        name: 'Middlewares',
+        exercises: 7,
+        id: 2
+      }
+    ]
   }
+]
+
 
   return (
     <div>
-      <Course course={course}/>
+      <h1>Web development curriculum</h1>
+      {courses.map(course =>
+        <div key={course.id}>
+          <Course course = {course} />
+      </div>)}
     </div>
+    
+    
     
   )
 }
