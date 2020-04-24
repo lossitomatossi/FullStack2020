@@ -1,39 +1,62 @@
 import React, { useState } from 'react'
 
 const Filter = (props) => (
-    <>
-      filter shown with: <input
-        value = {props.newFilter}
-        onChange = {props.handleFilterChange}
-      />
-    </>
-  )
+  <>
+    filter shown with: <input
+      value={props.newFilter}
+      onChange={props.handleFilterChange}
+    />
+  </>
+)
 
 
 const Persons = (props) => {
-    return (
+  return (
     <>
       <ul>
-      {props.persons.map(person =>
-        <li key={person.name}>{person.name} {person.number}</li>)}
+        {props.persons.map(person =>
+          <li key={person.name}>{person.name} {person.number}</li>)}
       </ul>
     </>
   )
 }
 
+const PersonForm = (props) => {
+  return (
+    <form onSubmit={props.addPerson}>
+      <div>
+        name: <input
+          value={props.newPerson}
+          onChange={props.handlePersonChange}
+        />
+      </div>
+      <div>
+        number: <input
+          value={props.newNumber}
+          onChange={props.handleNumberChange}
+        />
+      </div>
+      <div>
+        <button type="submit">add</button>
+      </div>
+    </form>
+  )
+
+}
+
 
 const App = () => {
-  const [ persons, setPersons] = useState([
+  const [persons, setPersons] = useState([
     { name: 'Arto Hellas', number: '040-123456' },
     { name: 'Ada Lovelace', number: '39-44-5323523' },
     { name: 'Dan Abramov', number: '12-43-234345' },
     { name: 'Mary Poppendieck', number: '39-23-6423122' }
   ])
-  const [ newPerson, setNewPerson ] = useState('')
-  const [ newNumber, setNewNumber ] = useState('')
-  const [ newFilter, setNewFilter ] = useState('')
-  const [ newList, setNewList ] = useState('')
-  const [ showAll, setShowAll ] = useState(true)
+  const [newPerson, setNewPerson] = useState('')
+  const [newNumber, setNewNumber] = useState('')
+  const [newFilter, setNewFilter] = useState('')
+  const [newList, setNewList] = useState('')
+  const [showAll, setShowAll] = useState(true)
 
   const personsToShow = showAll
     ? persons
@@ -48,8 +71,8 @@ const App = () => {
 
     const personExists = persons.some(p => p.name === newPerson)
     console.log(personExists)
-    if (personExists) {window.alert(`${newPerson} is already added to phonebook`)}
-    else {setPersons(persons.concat(personObject))}
+    if (personExists) { window.alert(`${newPerson} is already added to phonebook`) }
+    else { setPersons(persons.concat(personObject)) }
 
     setNewPerson('')
   }
@@ -78,35 +101,21 @@ const App = () => {
       setShowAll(true)
       window.alert(`${newFilter} is someone who doesn't exist or hasn't been added yet. Try looking for someone else`)
       setNewFilter('')
-    } 
+    }
   }
 
   return (
     <div>
       <h2>Phonebook</h2>
-      <div>
-        <Filter persons={persons} newFilter={newFilter} handleFilterChange={handleFilterChange}/>
-      </div>
+
+      <Filter persons={persons} newFilter={newFilter} handleFilterChange={handleFilterChange} />
 
       <h3>Add a new</h3>
-      <form onSubmit={addPerson}>
-        <div>
-          name: <input
-           value = {newPerson}
-           onChange = {handlePersonChange}
-           />
-        </div>
-        <div>
-          number: <input
-          value = {newNumber}
-          onChange = {handleNumberChange}
-          />
-        </div>
-        <div>
-          <button type="submit">add</button>
-        </div>
-      </form>
+
+      <PersonForm addPerson={addPerson} newPerson={newPerson} handlePersonChange={handlePersonChange} newNumber={newNumber} handleNumberChange={handleNumberChange} />
+      
       <h3>Numbers</h3>
+      
       <Persons persons={personsToShow} />
     </div>
   )
