@@ -1,27 +1,14 @@
 import React, { useState } from 'react'
 
-const Filter = (props) => {
-  const [newFilter, setNewFilter ] = useState('')
-  
-
-  const handleFilterChange = (event) => {
-    setNewFilter(event.target.value)
-    const filt = props.persons.some(p => p.name.toLowerCase().includes(event.target.value.toLowerCase()))
-    if (filt && event.target.value !== '') {
-      console.log(`${event.target.value} matches to something`)
-    } else {
-      console.log(`${event.target.value} Ei osu`)
-    }
-  }
-  return (
+const Filter = (props) => (
     <>
       filter shown with: <input
-        value = {newFilter}
-        onChange = {handleFilterChange}
+        value = {props.newFilter}
+        onChange = {props.handleFilterChange}
       />
     </>
   )
-}
+
 
 const Persons = (props) => {
     return (
@@ -41,10 +28,16 @@ const App = () => {
     { name: 'Ada Lovelace', number: '39-44-5323523' },
     { name: 'Dan Abramov', number: '12-43-234345' },
     { name: 'Mary Poppendieck', number: '39-23-6423122' }
-  ]) 
+  ])
   const [ newPerson, setNewPerson ] = useState('')
-  const [newNumber, setNewNumber ] = useState('')
-  
+  const [ newNumber, setNewNumber ] = useState('')
+  const [ newFilter, setNewFilter ] = useState('')
+  const [ newList, setNewList ] = useState('')
+  const [ showAll, setShowAll ] = useState(true)
+
+  const personsToShow = showAll
+    ? persons
+    : newList
 
   const addPerson = (event) => {
     event.preventDefault()
@@ -58,7 +51,6 @@ const App = () => {
     if (personExists) {window.alert(`${newPerson} is already added to phonebook`)}
     else {setPersons(persons.concat(personObject))}
 
-    
     setNewPerson('')
   }
 
@@ -72,13 +64,28 @@ const App = () => {
     setNewNumber(event.target.value)
   }
 
-  
+  const handleFilterChange = (event) => {
+    setNewFilter(event.target.value)
+    const filt = persons.some(p => p.name.toLowerCase().includes(event.target.value.toLowerCase()))
+    const filteredPersons = persons.filter(p => p.name.toLowerCase().includes(event.target.value.toLowerCase()))
+    if (event.target.value === '') {
+      setShowAll(true)
+    } else if (filt) {
+      console.log(`${event.target.value} matches to something`)
+      setNewList(filteredPersons)
+      setShowAll(false)
+    } else {
+      setShowAll(true)
+      window.alert(`${newFilter} is someone who doesn't exist or hasn't been added yet. Try looking for someone else`)
+      setNewFilter('')
+    } 
+  }
 
   return (
     <div>
       <h2>Phonebook</h2>
       <div>
-        <Filter persons={persons}/>
+        <Filter persons={persons} newFilter={newFilter} handleFilterChange={handleFilterChange}/>
       </div>
 
       <h3>Add a new</h3>
@@ -100,7 +107,7 @@ const App = () => {
         </div>
       </form>
       <h3>Numbers</h3>
-      <Persons persons={persons} />
+      <Persons persons={personsToShow} />
     </div>
   )
 
