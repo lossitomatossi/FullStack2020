@@ -1,8 +1,17 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 
+const Filter = (props) => (
+  <>
+    find countries: <input
+      value={props.filter}
+      onChange={props.handleFilterChange}
+    />
+  </>
+)
+
 const Countries = (props) => {
-  //console.log(props)
+  console.log(props)
   return (
     <>
     <h2>Countries</h2>
@@ -30,7 +39,7 @@ const Country = (props) => {
         <p>capital {props.country.capital}</p>
         <p>population {props.country.population}</p>
 
-        <h3>languages</h3>
+        <h3>Spoken languages</h3>
         <ul>
           {props.country.languages.map(language =>
           <li key={language.name}> {language.name} </li>)}
@@ -49,24 +58,39 @@ const Country = (props) => {
 }
 
 const ShowCountries = (props) => {
-  console.log(props, 'to show')
-
-  return (
-    <>
-    </>
-  )
+  console.log(props)
+  if (props.countries.length > 10) {
+    return(
+      <>
+      <p>too many matches, specify another filter</p>
+      </>
+    )
+  } else if(props.countries.length === 1) {
+    
+    return(
+      <>
+        <Country country={props.countries[0]} />    
+      </>
+    )
+  } else {
+    return (
+      <>
+      <Countries countries={props.countries} />
+      </>
+    )
+  }
 }
 
 const App = () => {
   const [countries, setCountries] = useState([])
-  const [showAll, setShowAll] = useState(false)
-  const [country, setCountry] = useState([])
+  const [showAll, setShowAll] = useState(true)
+  const [filter, setFilter] = useState('')
+  const [newList, setNewList] = useState('')
 
 
   const countriesToShow = showAll
     ? countries
-    : countries[0]
-  //console.log(countriesToShow, 'nää pitäis näkyy')
+    : newList
 
   useEffect(() => {
     axios
@@ -75,11 +99,31 @@ const App = () => {
         setCountries(response.data)
       })
   }, [])
+
+  const handleFilterChange = (event) => {
+    setFilter(event.target.value)
+    console.log(event.target.value, 'is now the filter')
+    const filteredCountries = countries.filter(c => c.name.toLowerCase().includes(event.target.value.toLowerCase()))
+    setNewList(filteredCountries)
+    const amountOfCountries = filteredCountries.length
+    if (event.target.value === '') {
+      setShowAll(true)
+    } else if (amountOfCountries === 1) {
+      console.log(`${event.target.value} only one match`)
+      //setNewList(filteredPersons)
+      
+    } else if (amountOfCountries <= 10) {
+      setShowAll(false)
+      console.log(`${amountOfCountries} countries in the list, which is under or equal to 10`)
+    }
+  }
   
 
   return (
     <div>
-      <Country country={countries[0]} />
+      <Filter countries={countries} handleFilterChange={handleFilterChange} filter={filter}/>
+      <ShowCountries countries={countriesToShow} />
+      
     </div>
   )
 
