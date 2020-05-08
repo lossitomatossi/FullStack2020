@@ -11,13 +11,21 @@ const Filter = (props) => (
 )
 
 const Countries = (props) => {
-  console.log(props)
+  //console.log('Countries saa tiedot', props)
   return (
     <>
     <h2>Countries</h2>
       <ul>
         {props.countries.map(country =>
-          <li key={country.name}>{country.name}</li>)}
+          <li key={country.name}>
+            {country.name}
+            <button
+              value={country.name}
+              onClick={props.onClick}
+            >
+                show
+            </button>
+          </li>)}
       </ul>
     </>
   )
@@ -75,7 +83,7 @@ const ShowCountries = (props) => {
   } else {
     return (
       <>
-      <Countries countries={props.countries} />
+      <Countries countries={props.countries} onClick={props.onClick}/>
       </>
     )
   }
@@ -102,7 +110,6 @@ const App = () => {
 
   const handleFilterChange = (event) => {
     setFilter(event.target.value)
-    console.log(event.target.value, 'is now the filter')
     const filteredCountries = countries.filter(c => c.name.toLowerCase().includes(event.target.value.toLowerCase()))
     setNewList(filteredCountries)
     const amountOfCountries = filteredCountries.length
@@ -117,12 +124,21 @@ const App = () => {
       console.log(`${amountOfCountries} countries in the list, which is under or equal to 10`)
     }
   }
+
+  const handleButtonClick = (event) => {
+    const name = event.target.value
+    const filteredCountries = countries.filter(c => c.name.toLowerCase().includes(name.toLowerCase()))
+    console.log(filteredCountries)
+    setNewList(filteredCountries)
+    setShowAll(false)
+    setFilter('')
+  }
   
 
   return (
     <div>
       <Filter countries={countries} handleFilterChange={handleFilterChange} filter={filter}/>
-      <ShowCountries countries={countriesToShow} />
+      <ShowCountries countries={countriesToShow} onClick={handleButtonClick}/>
       
     </div>
   )
