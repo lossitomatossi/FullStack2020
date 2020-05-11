@@ -1,89 +1,110 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 
-const Filter = (props) => (
+const Filter = ({filter, handleFilterChange}) => (
   <>
     find countries: <input
-      value={props.filter}
-      onChange={props.handleFilterChange}
+      value={filter}
+      onChange={handleFilterChange}
     />
   </>
 )
 
-const Countries = (props) => {
-  //console.log('Countries saa tiedot', props)
-  return (
+const Countries = ({countries, onClick}) => (
     <>
-    <h2>Countries</h2>
+      <h2>Countries</h2>
       <ul>
-        {props.countries.map(country =>
+        {countries.map(country =>
           <li key={country.name}>
             {country.name}
             <button
               value={country.name}
-              onClick={props.onClick}
+              onClick={onClick}
             >
-                show
+              show
             </button>
           </li>)}
       </ul>
     </>
   )
+
+
+const Country = ({country}) => {
+  const api_key = process.env.REACT_APP_API_KEY
+  const [weather, setWeather] = useState('')
+  const url= `http://api.weatherstack.com/current?access_key=${api_key}&query=${country.capital}`
+
+  useEffect(() => {
+    axios
+      .get(url)
+      .then(response => {
+        setWeather(response.data)
+      })
+  }, [url])
+
+  return (
+    <>
+      <h2>{country.name}</h2>
+      <p>capital {country.capital}</p>
+      <p>population {country.population}</p>
+
+      <h3>Spoken languages</h3>
+      <ul>
+        {country.languages.map(language =>
+          <li key={language.name}> {language.name} </li>)}
+      </ul>
+      <img
+        src={country.flag}
+        alt={country.name}
+        height='200'
+      />
+      <h3>Weather in {country.capital}</h3>
+      <Weather weather={weather.current} />
+
+    </>
+  )
 }
 
-const Country = (props) => {
-  console.log(props)
-  if (props.country === undefined) {
-    console.log('undefined')
+const Weather = ({weather}) => {
+  if (weather === undefined || weather === '') {
     return (
       <>
-        undefined
+        <p>temperature data missing</p>
       </>
     )
   } else {
     return (
       <>
-        <h2>{props.country.name}</h2>
-        <p>capital {props.country.capital}</p>
-        <p>population {props.country.population}</p>
-
-        <h3>Spoken languages</h3>
-        <ul>
-          {props.country.languages.map(language =>
-          <li key={language.name}> {language.name} </li>)}
-        </ul>
+        <p><b>temperature:</b> {weather.temperature} Celsius</p>
         <img
-          src={props.country.flag}
-          alt={props.country.name}
-          height='200'
-          
+          src={weather.weather_icons}
+          alt={weather.weather_descriptions}
         />
+        <p><b>wind: </b>{weather.wind_speed} mph direction {weather.wind_dir}</p>
         
       </>
     )
   }
-  
 }
 
-const ShowCountries = (props) => {
-  console.log(props)
-  if (props.countries.length > 10) {
-    return(
+const ShowCountries = ({countries, onClick}) => {
+  if (countries.length > 10) {
+    return (
       <>
-      <p>too many matches, specify another filter</p>
+        <p>too many matches, specify another filter</p>
       </>
     )
-  } else if(props.countries.length === 1) {
-    
-    return(
+  } else if (countries.length === 1) {
+
+    return (
       <>
-        <Country country={props.countries[0]} />    
+        <Country country={countries[0]} />
       </>
     )
   } else {
     return (
       <>
-      <Countries countries={props.countries} onClick={props.onClick}/>
+        <Countries countries={countries} onClick={onClick} />
       </>
     )
   }
@@ -116,30 +137,30 @@ const App = () => {
     if (event.target.value === '') {
       setShowAll(true)
     } else if (amountOfCountries === 1) {
-      console.log(`${event.target.value} only one match`)
+      //console.log(`${event.target.value} only one match`)
       //setNewList(filteredPersons)
-      
+
     } else if (amountOfCountries <= 10) {
       setShowAll(false)
-      console.log(`${amountOfCountries} countries in the list, which is under or equal to 10`)
+      //console.log(`${amountOfCountries} countries in the list, which is under or equal to 10`)
     }
   }
 
   const handleButtonClick = (event) => {
     const name = event.target.value
     const filteredCountries = countries.filter(c => c.name.toLowerCase().includes(name.toLowerCase()))
-    console.log(filteredCountries)
+    //console.log(filteredCountries)
     setNewList(filteredCountries)
     setShowAll(false)
     setFilter('')
   }
-  
+
 
   return (
     <div>
-      <Filter countries={countries} handleFilterChange={handleFilterChange} filter={filter}/>
-      <ShowCountries countries={countriesToShow} onClick={handleButtonClick}/>
-      
+      <Filter countries={countries} handleFilterChange={handleFilterChange} filter={filter} />
+      <ShowCountries countries={countriesToShow} onClick={handleButtonClick} />
+
     </div>
   )
 
