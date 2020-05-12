@@ -1,21 +1,21 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 
-const Filter = (props) => (
+const Filter = ({newFilter, handleFilterChange}) => (
   <>
     filter shown with: <input
-      value={props.newFilter}
-      onChange={props.handleFilterChange}
+      value={newFilter}
+      onChange={handleFilterChange}
     />
   </>
 )
 
 
-const Persons = (props) => {
+const Persons = ({persons}) => {
   return (
     <>
       <ul>
-        {props.persons.map(person =>
+        {persons.map(person =>
           <li key={person.name}>{person.name} {person.number}</li>)}
       </ul>
     </>
@@ -74,7 +74,7 @@ const App = () => {
     }
 
     const personExists = persons.some(p => p.name === newPerson)
-    console.log(personExists)
+    //console.log(personExists)
     if (personExists) { window.alert(`${newPerson} is already added to phonebook`) }
     else { setPersons(persons.concat(personObject)) }
 
@@ -98,12 +98,12 @@ const App = () => {
     if (event.target.value === '') {
       setShowAll(true)
     } else if (filt) {
-      console.log(`${event.target.value} matches to something`)
+      //console.log(`${event.target.value} matches to something`)
       setNewList(filteredPersons)
       setShowAll(false)
     } else {
       setShowAll(true)
-      window.alert(`${newFilter} is someone who doesn't exist or hasn't been added yet. Try looking for someone else`)
+      window.alert(`${event.target.value} is someone who doesn't exist or hasn't been added yet. Try looking for someone else`)
       setNewFilter('')
     }
   }
