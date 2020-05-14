@@ -84,9 +84,7 @@ const App = () => {
           setPersons(persons.concat(response.data))
           setNewPerson('')
           setNewNumber('')
-        })
-        
-        
+        })    
     }
   }
 
