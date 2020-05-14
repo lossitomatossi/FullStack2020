@@ -85,7 +85,18 @@ const App = () => {
     const personExists = persons.some(p => p.name === newPerson)
     //console.log(personExists)
     if (personExists) {
-      window.alert(`${newPerson} is already added to phonebook`)
+      const result = window.confirm(`${newPerson} is already added to phonebook, replace the old number with a new one`)
+      if (result) {
+        console.log('haluttiin vaihtaa numero')
+        const id = persons.find(person => person.name === newPerson).id
+        console.log(id)
+        personService
+          .update(id, personObject)
+          .then(returnedPerson => {
+            setPersons(persons.map(person => person.id !== id ? person : returnedPerson))
+          })
+          window.location.reload(true);
+      }
     } else {
       personService
         .create(personObject)
@@ -98,27 +109,19 @@ const App = () => {
   }
 
   const deletePerson = (event) => {
-    //console.log(persons)
     const id = parseInt(event.target.value, 10)
-    //console.log(id)
     const person = persons.find(person => person.id === id)
     const result = window.confirm(`Delete ${person.name}`);
-    //console.log(result)
     if (result) {
       personService.deletePerson(person.id)
       const index = persons.indexOf(person)
-      //console.log(index, 'täält löyty')
       if (index > -1) {
         const copyOfPersons = persons
         copyOfPersons.splice(index, 1)
         setPersons(copyOfPersons)
         window.location.reload(true);
       }
-      //console.log(persons)
-
     }
-
-
   }
 
   const handlePersonChange = (event) => {
