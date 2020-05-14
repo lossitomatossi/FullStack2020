@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import personService from './services/persons'
 
-const Filter = ({newFilter, handleFilterChange}) => (
+const Filter = ({ newFilter, handleFilterChange }) => (
   <>
     filter shown with: <input
       value={newFilter}
@@ -11,7 +11,7 @@ const Filter = ({newFilter, handleFilterChange}) => (
 )
 
 
-const Persons = ({persons}) => {
+const Persons = ({ persons }) => {
   return (
     <>
       <ul>
@@ -75,10 +75,19 @@ const App = () => {
 
     const personExists = persons.some(p => p.name === newPerson)
     //console.log(personExists)
-    if (personExists) { window.alert(`${newPerson} is already added to phonebook`) }
-    else { setPersons(persons.concat(personObject)) }
-
-    setNewPerson('')
+    if (personExists) {
+      window.alert(`${newPerson} is already added to phonebook`)
+    } else {
+      personService
+        .create(personObject)
+        .then(response => {
+          setPersons(persons.concat(response.data))
+          setNewPerson('')
+          setNewNumber('')
+        })
+        
+        
+    }
   }
 
   const handlePersonChange = (event) => {
@@ -117,9 +126,9 @@ const App = () => {
       <h3>Add a new</h3>
 
       <PersonForm addPerson={addPerson} newPerson={newPerson} handlePersonChange={handlePersonChange} newNumber={newNumber} handleNumberChange={handleNumberChange} />
-      
+
       <h3>Numbers</h3>
-      
+
       <Persons persons={personsToShow} />
     </div>
   )
