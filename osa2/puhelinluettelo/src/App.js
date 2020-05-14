@@ -11,12 +11,21 @@ const Filter = ({ newFilter, handleFilterChange }) => (
 )
 
 
-const Persons = ({ persons }) => {
+const Persons = ({ persons, onClick }) => {
+
   return (
     <>
       <ul>
         {persons.map(person =>
-          <li key={person.name}>{person.name} {person.number}</li>)}
+          <li key={person.id}>
+            {person.name} {person.number}
+            <button
+              value={person.id}
+              onClick={onClick}>
+              delete
+            </button>
+
+          </li>)}
       </ul>
     </>
   )
@@ -84,8 +93,32 @@ const App = () => {
           setPersons(persons.concat(response.data))
           setNewPerson('')
           setNewNumber('')
-        })    
+        })
     }
+  }
+
+  const deletePerson = (event) => {
+    //console.log(persons)
+    const id = parseInt(event.target.value, 10)
+    //console.log(id)
+    const person = persons.find(person => person.id === id)
+    const result = window.confirm(`Delete ${person.name}`);
+    //console.log(result)
+    if (result) {
+      personService.deletePerson(person.id)
+      const index = persons.indexOf(person)
+      //console.log(index, 'täält löyty')
+      if (index > -1) {
+        const copyOfPersons = persons
+        copyOfPersons.splice(index, 1)
+        setPersons(copyOfPersons)
+        window.location.reload(true);
+      }
+      //console.log(persons)
+
+    }
+
+
   }
 
   const handlePersonChange = (event) => {
@@ -127,7 +160,7 @@ const App = () => {
 
       <h3>Numbers</h3>
 
-      <Persons persons={personsToShow} />
+      <Persons persons={personsToShow} onClick={deletePerson} />
     </div>
   )
 
