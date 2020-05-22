@@ -111,7 +111,7 @@ const App = () => {
         setTimeout(() => {
           setErrorMessage(null)
           window.location.reload(true);
-        }, 5000)
+        }, 2000)
         personService
           .update(id, personObject)
           .then(returnedPerson => {
