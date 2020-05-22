@@ -66,8 +66,8 @@ const App = () => {
   useEffect(() => {
     personService
       .getAll()
-      .then(response => {
-        setPersons(response.data)
+      .then(intialPersons => {
+        setPersons(intialPersons)
       })
   }, [])
 
