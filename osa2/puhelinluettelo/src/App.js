@@ -1,5 +1,19 @@
 import React, { useState, useEffect } from 'react'
 import personService from './services/persons'
+import './index.css'
+
+const Notication = ({ message }) => {
+  console.log(message)
+  if (message === null || message === '') {
+    return null
+  }
+
+  return (
+    <div className="error">
+      {message}
+    </div>
+  )
+}
 
 const Filter = ({ newFilter, handleFilterChange }) => (
   <>
@@ -62,6 +76,7 @@ const App = () => {
   const [newFilter, setNewFilter] = useState('')
   const [newList, setNewList] = useState('')
   const [showAll, setShowAll] = useState(true)
+  const [errorMessage, setErrorMessage] = useState('')
 
   useEffect(() => {
     personService
@@ -90,12 +105,19 @@ const App = () => {
         console.log('haluttiin vaihtaa numero')
         const id = persons.find(person => person.name === newPerson).id
         console.log(id)
+        setErrorMessage(
+          `Changed number of ${newPerson}`
+        )
+        setTimeout(() => {
+          setErrorMessage(null)
+          window.location.reload(true);
+        }, 5000)
         personService
           .update(id, personObject)
           .then(returnedPerson => {
             setPersons(persons.map(person => person.id !== id ? person : returnedPerson))
           })
-          window.location.reload(true);
+
       }
     } else {
       personService
@@ -154,7 +176,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-
+      <Notication message={errorMessage} />
       <Filter persons={persons} newFilter={newFilter} handleFilterChange={handleFilterChange} />
 
       <h3>Add a new</h3>
