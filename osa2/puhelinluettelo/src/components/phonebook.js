@@ -72,4 +72,4 @@ const PersonForm = (props) => {
 
 }
 
-export default { Notification, Filter, Persons, PersonForm }
+export { Notification, Filter, Persons, PersonForm }

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import personService from './services/persons'
 import './index.css'
-import components from './components/phonebook.js'
+import { Filter, Notification, PersonForm, Persons } from './components/phonebook.js'
 
 const App = () => {
   const [persons, setPersons] = useState([])
@@ -136,16 +136,16 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      <components.Notification message={errorMessage} type={errorType} />
-      <components.Filter persons={persons} newFilter={newFilter} handleFilterChange={handleFilterChange} />
+      <Notification message={errorMessage} type={errorType} />
+      <Filter persons={persons} newFilter={newFilter} handleFilterChange={handleFilterChange} />
 
       <h3>Add a new</h3>
 
-      <components.PersonForm addPerson={addPerson} newPerson={newPerson} handlePersonChange={handlePersonChange} newNumber={newNumber} handleNumberChange={handleNumberChange} />
+      <PersonForm addPerson={addPerson} newPerson={newPerson} handlePersonChange={handlePersonChange} newNumber={newNumber} handleNumberChange={handleNumberChange} />
 
       <h3>Numbers</h3>
 
-      <components.Persons persons={personsToShow} onClick={deletePerson} />
+      <Persons persons={personsToShow} onClick={deletePerson} />
     </div>
   )
 
