@@ -3,7 +3,7 @@ import personService from './services/persons'
 import './index.css'
 
 const Notication = ({ message }) => {
-  console.log(message)
+  //console.log(message)
   if (message === null || message === '') {
     return null
   }
@@ -98,9 +98,8 @@ const App = () => {
     }
 
     const personExists = persons.some(p => p.name === newPerson)
-    //console.log(personExists)
     if (personExists) {
-      const result = window.confirm(`${newPerson} is already added to phonebook, replace the old number with a new one`)
+      const result = window.confirm(`${newPerson} is already added to phonebook, replace the old number with a new one?`)
       if (result) {
         console.log('haluttiin vaihtaa numero')
         const id = persons.find(person => person.name === newPerson).id
@@ -110,7 +109,6 @@ const App = () => {
         )
         setTimeout(() => {
           setErrorMessage(null)
-          window.location.reload(true);
         }, 2000)
         personService
           .update(id, personObject)
@@ -122,12 +120,13 @@ const App = () => {
     } else {
       personService
         .create(personObject)
-        .then(response => {
-          setPersons(persons.concat(response.data))
-          setNewPerson('')
-          setNewNumber('')
+        .then(returnedPerson => {
+          setPersons(persons.concat(returnedPerson))
+          
         })
     }
+    setNewPerson('')
+    setNewNumber('')
   }
 
   const deletePerson = (event) => {
@@ -141,18 +140,19 @@ const App = () => {
         const copyOfPersons = persons
         copyOfPersons.splice(index, 1)
         setPersons(copyOfPersons)
-        window.location.reload(true);
+        setErrorMessage(`Deleted ${person.name}`)
+        setTimeout(() => {
+          setErrorMessage('')
+        }, 2000)
       }
     }
   }
 
   const handlePersonChange = (event) => {
-    //console.log(event.target.value)
     setNewPerson(event.target.value)
   }
 
   const handleNumberChange = (event) => {
-    //console.log(event.target.value)
     setNewNumber(event.target.value)
   }
 
@@ -163,7 +163,6 @@ const App = () => {
     if (event.target.value === '') {
       setShowAll(true)
     } else if (filt) {
-      //console.log(`${event.target.value} matches to something`)
       setNewList(filteredPersons)
       setShowAll(false)
     } else {
