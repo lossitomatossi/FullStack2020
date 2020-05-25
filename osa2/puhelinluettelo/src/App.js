@@ -3,50 +3,6 @@ import personService from './services/persons'
 import './index.css'
 import components from './components/phonebook.js'
 
-const Persons = ({ persons, onClick }) => {
-
-  return (
-    <>
-      <ul>
-        {persons.map(person =>
-          <li key={person.id}>
-            {person.name} {person.number}
-            <button
-              value={person.id}
-              onClick={onClick}>
-              delete
-            </button>
-
-          </li>)}
-      </ul>
-    </>
-  )
-}
-
-const PersonForm = (props) => {
-  return (
-    <form onSubmit={props.addPerson}>
-      <div>
-        name: <input
-          value={props.newPerson}
-          onChange={props.handlePersonChange}
-        />
-      </div>
-      <div>
-        number: <input
-          value={props.newNumber}
-          onChange={props.handleNumberChange}
-        />
-      </div>
-      <div>
-        <button type="submit">add</button>
-      </div>
-    </form>
-  )
-
-}
-
-
 const App = () => {
   const [persons, setPersons] = useState([])
   const [newPerson, setNewPerson] = useState('')
@@ -185,11 +141,11 @@ const App = () => {
 
       <h3>Add a new</h3>
 
-      <PersonForm addPerson={addPerson} newPerson={newPerson} handlePersonChange={handlePersonChange} newNumber={newNumber} handleNumberChange={handleNumberChange} />
+      <components.PersonForm addPerson={addPerson} newPerson={newPerson} handlePersonChange={handlePersonChange} newNumber={newNumber} handleNumberChange={handleNumberChange} />
 
       <h3>Numbers</h3>
 
-      <Persons persons={personsToShow} onClick={deletePerson} />
+      <components.Persons persons={personsToShow} onClick={deletePerson} />
     </div>
   )
 
