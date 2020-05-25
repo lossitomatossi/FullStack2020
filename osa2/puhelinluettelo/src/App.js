@@ -1,26 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import personService from './services/persons'
 import './index.css'
+import Notification from './components/Notification.js'
 
-const Notication = ({ message, type }) => {
-  if (message === null || message === '') {
-    return null
-  }
-  if (type === 'info') {
-    return (
-      <div className='info'>
-        {message}
-      </div>
-    )
-  } else {
-    return (
-      <div className='alert'>
-        {message}
-      </div>
-    )
-  }
-
-}
 
 const Filter = ({ newFilter, handleFilterChange }) => (
   <>
@@ -209,7 +191,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      <Notication message={errorMessage} type={errorType} />
+      <Notification message={errorMessage} type={errorType} />
       <Filter persons={persons} newFilter={newFilter} handleFilterChange={handleFilterChange} />
 
       <h3>Add a new</h3>
