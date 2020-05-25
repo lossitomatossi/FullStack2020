@@ -2,17 +2,25 @@ import React, { useState, useEffect } from 'react'
 import personService from './services/persons'
 import './index.css'
 
-const Notication = ({ message }) => {
+const Notication = ({ message, type }) => {
   //console.log(message)
   if (message === null || message === '') {
     return null
   }
+  if (type === 'info') {
+    return (
+      <div className='info'>
+        {message}
+      </div>
+    )
+  } else {
+    return (
+      <div className='alert'>
+        {message}
+      </div>
+    )
+  }
 
-  return (
-    <div className="error">
-      {message}
-    </div>
-  )
 }
 
 const Filter = ({ newFilter, handleFilterChange }) => (
@@ -77,6 +85,7 @@ const App = () => {
   const [newList, setNewList] = useState('')
   const [showAll, setShowAll] = useState(true)
   const [errorMessage, setErrorMessage] = useState('')
+  const [errorType, setErrorType] = useState('')
 
   useEffect(() => {
     personService
@@ -101,9 +110,8 @@ const App = () => {
     if (personExists) {
       const result = window.confirm(`${newPerson} is already added to phonebook, replace the old number with a new one?`)
       if (result) {
-        console.log('haluttiin vaihtaa numero')
         const id = persons.find(person => person.name === newPerson).id
-        console.log(id)
+        setErrorType('info')
         setErrorMessage(
           `Changed number of ${newPerson}`
         )
@@ -122,8 +130,15 @@ const App = () => {
         .create(personObject)
         .then(returnedPerson => {
           setPersons(persons.concat(returnedPerson))
-          
         })
+        setErrorType('info')
+        setErrorMessage(
+          `Added ${newPerson} to the phonebook`
+        )
+        setTimeout(() => {
+          setErrorMessage(null)
+        }, 2000)
+
     }
     setNewPerson('')
     setNewNumber('')
@@ -140,6 +155,7 @@ const App = () => {
         const copyOfPersons = persons
         copyOfPersons.splice(index, 1)
         setPersons(copyOfPersons)
+        setErrorType('info')
         setErrorMessage(`Deleted ${person.name}`)
         setTimeout(() => {
           setErrorMessage('')
@@ -175,7 +191,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      <Notication message={errorMessage} />
+      <Notication message={errorMessage} type={errorType} />
       <Filter persons={persons} newFilter={newFilter} handleFilterChange={handleFilterChange} />
 
       <h3>Add a new</h3>
