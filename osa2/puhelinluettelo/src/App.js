@@ -1,18 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import personService from './services/persons'
 import './index.css'
-import Notification from './components/Notification.js'
-
-
-const Filter = ({ newFilter, handleFilterChange }) => (
-  <>
-    filter shown with: <input
-      value={newFilter}
-      onChange={handleFilterChange}
-    />
-  </>
-)
-
+import components from './components/phonebook.js'
 
 const Persons = ({ persons, onClick }) => {
 
@@ -191,8 +180,8 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      <Notification message={errorMessage} type={errorType} />
-      <Filter persons={persons} newFilter={newFilter} handleFilterChange={handleFilterChange} />
+      <components.Notification message={errorMessage} type={errorType} />
+      <components.Filter persons={persons} newFilter={newFilter} handleFilterChange={handleFilterChange} />
 
       <h3>Add a new</h3>
 
