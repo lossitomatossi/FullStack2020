@@ -3,7 +3,6 @@ import personService from './services/persons'
 import './index.css'
 
 const Notication = ({ message, type }) => {
-  //console.log(message)
   if (message === null || message === '') {
     return null
   }
@@ -111,17 +110,27 @@ const App = () => {
       const result = window.confirm(`${newPerson} is already added to phonebook, replace the old number with a new one?`)
       if (result) {
         const id = persons.find(person => person.name === newPerson).id
-        setErrorType('info')
+        personService
+          .update(id, personObject)
+          .then(returnedPerson => {
+            setPersons(persons.map(person => person.id !== id ? person : returnedPerson))
+            setErrorType('info')
         setErrorMessage(
           `Changed number of ${newPerson}`
         )
         setTimeout(() => {
           setErrorMessage(null)
         }, 2000)
-        personService
-          .update(id, personObject)
-          .then(returnedPerson => {
-            setPersons(persons.map(person => person.id !== id ? person : returnedPerson))
+          })
+          .catch(error => {
+            setErrorType('alert')
+            setErrorMessage(
+              `Person' ${personObject.name}' was already removed from the server`
+            )
+            setTimeout(() => {
+              setErrorMessage(null)
+            }, 5000)
+            setPersons(persons.filter(p => p.id !== id))
           })
 
       }
@@ -149,12 +158,21 @@ const App = () => {
     const person = persons.find(person => person.id === id)
     const result = window.confirm(`Delete ${person.name}`);
     if (result) {
-      personService.deletePerson(person.id)
+      personService
+      .deletePerson(person.id)
+      .catch(error => {
+        setErrorType('alert')
+            setErrorMessage(
+              `Person' ${person.name}' was already removed from the server`
+            )
+            setTimeout(() => {
+              setErrorMessage(null)
+            }, 5000)
+            setPersons(persons.filter(p => p.id !== id))
+      })
       const index = persons.indexOf(person)
       if (index > -1) {
-        const copyOfPersons = persons
-        copyOfPersons.splice(index, 1)
-        setPersons(copyOfPersons)
+        setPersons(persons.filter(p => p.id !== id))
         setErrorType('info')
         setErrorMessage(`Deleted ${person.name}`)
         setTimeout(() => {
