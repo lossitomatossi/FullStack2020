@@ -30,7 +30,7 @@ let persons = [
     },
     {
         name: "Testi",
-        number: "pepperoni",
+        number: "1313131313",
         id: 5
     }
 ]
@@ -83,21 +83,20 @@ app.post('/api/persons', (request, response) => {
         })
     }
 
-    const nameExist = persons.filter(person => person.id === body.name)
-    if (nameExist) {
+    const nameExist = persons.filter(person => person.name === body.name)
+    if (nameExist.length > 0) {
         return response.status(403).json({
             error: `name '${body.name}' already exists`
         })
     }
-
+    
     const person = {
         name: body.name,
         number: body.number,
         id: generateId(),
     }
 
-    persons.concat(person)
-
+    persons = persons.concat(person)
     response.json(person)
 })
 
