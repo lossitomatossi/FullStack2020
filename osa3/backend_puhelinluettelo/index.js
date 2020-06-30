@@ -81,7 +81,7 @@ app.post('/api/persons', (request, response) => {
 
     const nameExist = persons.filter(person => person.id === body.name)
     if (nameExist) {
-        return response.status(400).json({
+        return response.status(403).json({
             error: `name '${body.name}' already exists`
         })
     }
